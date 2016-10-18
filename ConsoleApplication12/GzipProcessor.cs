@@ -23,7 +23,10 @@ namespace ConsoleApplication12
             while (true)
             {
                 var inBuffer = new byte[DataChunkSize];
-                if(inStream.Read(inBuffer, 0, inBuffer.Length)==0) break;
+                var bytesReadCount = inStream.Read(inBuffer, 0, inBuffer.Length);
+                if (bytesReadCount == 0) break;
+                if (bytesReadCount < DataChunkSize)
+                    inBuffer = inBuffer.Skip(0).Take(bytesReadCount).ToArray();
                 
                 var processingUnit = new DataProcessingUnit();
                 var waitHandle = new EventWaitHandle(false, EventResetMode.ManualReset);
